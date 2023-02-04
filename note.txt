@@ -1,0 +1,31 @@
+Client folder : frnt end 
+npx create react app : this is just the front end, easy
+
+npm install có
+
+Server Folder : API - backend
+
+
+Initilize server : npm init 
+
+npm install express cors mysql2: REST API 
+
+index.js samename as package.json
+npm instlal formik : for forming stuff 
+
+
+to run: node index.js
+
+npm install nodemon : automaticall show change don't need to refresh
+change script start  in package.json: nodemon index.js . THen just need to compile npm start and will run
+
+install mysql:
+npm install sequelize sequelize-cli
+sequelize init 
+
+models : database: 
+         we can define the table of each field and column
+       
+Create routes folder \\
+
+npm install jsontoken? json webtoken to generate token to hash user
