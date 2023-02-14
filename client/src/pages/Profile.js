@@ -1,16 +1,16 @@
-import { useParams, useNavigate} from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 
 function Profile() {
-   const navigate = useNavigate() 
-   let { id } = useParams()
+  const navigate = useNavigate()
+  let { id } = useParams()
 
-   const [username, setUsername] = useState("");
-   const [listOfPosts, setListOfPosts] = useState([]);
+  const [username, setUsername] = useState("");
+  const [listOfPosts, setListOfPosts] = useState([]);
 
-   useEffect(() => {
+  useEffect(() => {
     axios.get(`http://localhost:3001/auth/basicinfo/${id}`).then((response) => {
       setUsername(response.data.username);
     });
