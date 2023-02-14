@@ -10,6 +10,39 @@ import Typography from '@material-ui/core/Typography';
 import CodeBlock from './CodeBlock'
 import PromptDialog from './PromptDialog';
 
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+
+const ConfirmationDialog = ({ open, onClose, onConfirm }) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{"Confirm Action"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete this post?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          No
+        </Button>
+        <Button onClick={onConfirm} color="primary" autoFocus>
+          Yes
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -26,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   postBody: {
     ...theme.typography.body1,
     paddingTop: theme.spacing(2),
-    minHeight: '160px'
+    minHeight: '500px'
   },
   postTopFooter: {
     ...theme.typography.body1,
@@ -87,7 +120,21 @@ function Post() {
     const [editingTitle, setEditingTitle] = useState(false);
     const [editingBody, setEditingBody] = useState(false);
 
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
+    const handleDelete = () => {
+      setConfirmOpen(true);
+    };
+  
+    const handleConfirmDelete = () => {
+      deletePost(postObject.id);
+      setConfirmOpen(false);
+    };
+  
+    const handleCancelDelete = () => {
+      setConfirmOpen(false);
+    };
+  
 
     const addComment = () => {
         axios
@@ -212,6 +259,8 @@ function Post() {
                     type="text"
                     value={postObject.title}
                     onChange={handleTitleChange}
+                    style={{width: '100%'}}
+
                   />
                   <button type="submit">Save</button>
                 </form>
@@ -230,41 +279,48 @@ function Post() {
                     
       
                     {editingBody ? (
-  <form onSubmit={saveBody}>
-    <textarea
-      type="text"
-      value={postObject.postText}
-      onChange={handleBodyChange}
-    />
-    <button type="submit">Save</button>
-  </form>
-) : (
-  <div
-    className={classes.postBody}
-    onClick={() => {
-      if (authState.username === postObject.username) {
-        editPost("body");
-      }
-    }}
-  >
-    {/* {postObject.postText} */}
-    <CodeBlock language="python" code={postObject.postText}></CodeBlock>
-  </div>
-)}
+                        <form onSubmit={saveBody} style={{ width: "100%" }}>
+                          <textarea
+                            type="text"
+                            value={postObject.postText}
+                            onChange={handleBodyChange}
+                            style={{ width: "100%", height: "300px", backgroundColor: '#2b2b2b',
+                                      color: '#f2f2f2',
+                                      padding: '10px', }}
+                          />
+                          <button type="submit">Save</button>
+                        </form>
+                      ) : (
+                        <div
+                          className={classes.postBody}
+                          onClick={() => {
+                            if (authState.username === postObject.username) {
+                              editPost("body");
+                            }
+                          }}
+                        >
+                          {/* {postObject.postText} */}
+                          <CodeBlock language="python" code={postObject.postText}></CodeBlock>
+                        </div>
+                      )}
       
-              <div className={classes.postBottomFooter}>
-                {postObject.username}
-                {authState.username === postObject.username && (
-                  <button
-                    onClick={() => {
-                      deletePost(postObject.id);
-                    }}
-                  >
-                    {" "}
-                    Delete Post
-                  </button>
-                )}
-              </div>
+                        <div className={classes.postBottomFooter} style={{display: "flex", justifyContent: "space-between", padding: "2 px"}}>
+                            {authState.username === postObject.username && (
+                                <>
+                                  <div>
+                                  {/* other code ... */}
+                                  <Button onClick={handleDelete}>Delete</Button>
+                                  <ConfirmationDialog
+                                    open={confirmOpen}
+                                    onClose={handleCancelDelete}
+                                    onConfirm={handleConfirmDelete}
+                                  />
+                                </div> 
+                              </>
+                          )}
+                        </div>
+
+                  
           </div>
           
 

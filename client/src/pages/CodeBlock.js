@@ -3,22 +3,22 @@ import hljs from 'highlight.js';
 import javascript from 'highlight.js/lib/languages/javascript'
 import python from 'highlight.js/lib/languages/python'
 
-import "highlight.js/styles/github.css";
-
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('python', python);
 
-
-
-
 const CodeBlock = ({ code, language }) => {
   useEffect(() => {
-    // hljs.highlightBlock(document.getElementById('code'))
-    hljs.highlightAll()
+    hljs.highlightBlock(document.getElementById('code'))
   }, [code, language])
 
+  const codeBlockStyles = {
+    backgroundColor: '#2b2b2b',
+    color: '#f2f2f2',
+    padding: '10px',
+  };
+
   return (
-    <pre>
+    <pre style={codeBlockStyles}>
       <code id='code' className={language}>
         {code}
       </code>
