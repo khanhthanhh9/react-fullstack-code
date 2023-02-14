@@ -186,7 +186,22 @@ function Post() {
       };
 
     
-
+      const handleBodyChange = (event) => {
+        setPostObject({ ...postObject, postText: event.target.value });
+      };
+      
+      const saveBody = () => {
+        axios.put("http://localhost:3001/posts/postText", {newText: postObject.postText, id: id}, {headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        }}) 
+          .then((response) => {
+            if (response.data.error) {
+              console.log(response.data.error);
+            } else {
+              setEditingBody(false);
+            }
+          });
+      };
 
       return (
         <div className={classes.root}>
@@ -214,17 +229,28 @@ function Post() {
               )}
                     
       
-              <div
-                className={classes.postBody}
-                onClick={() => {
-                  if (authState.username === postObject.username) {
-                    editPost("body");
-                  }
-                }}
-              >
-                {/* {postObject.postText} */}
-                <CodeBlock language="python" code={postObject.postText}></CodeBlock>
-              </div>
+                    {editingBody ? (
+  <form onSubmit={saveBody}>
+    <textarea
+      type="text"
+      value={postObject.postText}
+      onChange={handleBodyChange}
+    />
+    <button type="submit">Save</button>
+  </form>
+) : (
+  <div
+    className={classes.postBody}
+    onClick={() => {
+      if (authState.username === postObject.username) {
+        editPost("body");
+      }
+    }}
+  >
+    {/* {postObject.postText} */}
+    <CodeBlock language="python" code={postObject.postText}></CodeBlock>
+  </div>
+)}
       
               <div className={classes.postBottomFooter}>
                 {postObject.username}
