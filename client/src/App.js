@@ -49,10 +49,10 @@ function App() {
       });
   }, []); // only render this one time when go to this page to make it secure
 
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    setAuthState({ username: "", id: 0, status: false });
-  };
+  // const logout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   setAuthState({ username: "", id: 0, status: false });
+  // };
 
 
   return (
@@ -67,7 +67,7 @@ function App() {
 
                 <Topbar authState = {authState}></Topbar>
 
-                <div className='navbar'>
+                {/* <div className='navbar'>
                   {!authState.status ? (
                     <>
                       <Link to="/login"> Login</Link>
@@ -83,8 +83,8 @@ function App() {
                     <h1>{authState.username} </h1>
                     {authState.status && <button onClick={logout}> Logout</button>}
                   </div>
-                </div>
-                <Routes>
+                </div> */}
+                <Routes key={authState.status}>
                   <Route path="/" element={<Home></Home>} ></Route>
                   <Route path="/createpost" element={<CreatePost></CreatePost>}></Route>
                   <Route path="/post/byId/:id" element={<Post></Post>} />
