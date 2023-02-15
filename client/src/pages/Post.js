@@ -1,6 +1,6 @@
 import React from 'react'
-import {useParams , useNavigate  } from "react-router-dom"
-import {useEffect, useState, useContext } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { useEffect, useState, useContext } from "react"
 import axios from "axios"
 import { AuthContext } from "../helpers/AuthContext";
 
@@ -66,19 +66,20 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: theme.spacing(2),
-    borderTop: "1px solid red",
-    borderBottom: "1px solid red",
+    paddingTop: theme.spacing(1),
+    borderTop: "1px solid grey",
+    borderBottom: "1px solid grey",
     height: '40px',
-    backgroundColor: '#1b1b8d',
-    color: '#f2f2f2',
+    backgroundColor: '#222',
+    color: '#fff',
     justifyContent: "center"
   },
   postBottomFooter: {
     display: "flex",
     justifyContent: "space-between",
-    paddingTop: theme.spacing(2),
-    borderTop: "1px solid red",
+    // paddingTop: theme.spacing(2),
+    textAlign: "center",
+    borderTop: "1px solid grey",
     height: '40px'
   },
   comment: {
@@ -93,8 +94,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-between",
     paddingBottom: theme.spacing(2),
-    borderBottom: "1px solid red",
-    
+
   },
   commentUsername: {
     fontWeight: 'bold',
@@ -110,222 +110,226 @@ const useStyles = makeStyles((theme) => ({
 
 function Post() {
 
-    const classes = useStyles();
-    let navigate = useNavigate()
-    let { id } = useParams()
-    const [postObject, setPostObject] = useState({});
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('')
-    const { authState } = useContext(AuthContext);
-    const [editingTitle, setEditingTitle] = useState(false);
-    const [editingBody, setEditingBody] = useState(false);
+  const classes = useStyles();
+  let navigate = useNavigate()
+  let { id } = useParams()
+  const [postObject, setPostObject] = useState({});
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('')
+  const { authState } = useContext(AuthContext);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [editingBody, setEditingBody] = useState(false);
 
-    const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleDelete = () => {
-      setConfirmOpen(true);
-    };
-  
-    const handleConfirmDelete = () => {
-      deletePost(postObject.id);
-      setConfirmOpen(false);
-    };
-  
-    const handleCancelDelete = () => {
-      setConfirmOpen(false);
-    };
-  
+  const handleDelete = () => {
+    setConfirmOpen(true);
+  };
 
-    const addComment = () => {
-        axios
-          .post(
-            "http://localhost:3001/comments",
-            {
-              commentBody: newComment,
-              PostId: id,
-            },
-            {
-              headers: {
-                accessToken: localStorage.getItem("accessToken"),
-              },
-            }
-          )
-          .then((response) => {
-            if (response.data.error) {
-              console.log(response.data.error);
-            } else {
-              const commentToAdd = {
-                commentBody: newComment,
-                username: response.data.username,
-              };
-              setComments([...comments, commentToAdd]);
-              setNewComment("");
-            }
-          });
-      };
-    
-    useEffect(() => {
+  const handleConfirmDelete = () => {
+    deletePost(postObject.id);
+    setConfirmOpen(false);
+  };
 
-        axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
-            setPostObject(response.data);
-        });
+  const handleCancelDelete = () => {
+    setConfirmOpen(false);
+  };
 
-        axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
-            setComments(response.data);
-        });
-        // hljs.highlightAll()
-    }, []);
 
-    const deleteComment = (id) => {
-        axios
-          .delete(`http://localhost:3001/comments/${id}`, {
-            headers: { accessToken: localStorage.getItem("accessToken") }, // additional header provided 
-          })
-          .then(() => {
-            setComments(
-              comments.filter((val) => {
-                return val.id !== id;
-              })
-            );
-          });
-      };
-
-      const deletePost = (id) => {
-        axios
-          .delete(`http://localhost:3001/posts/${id}`, {
-            headers: { accessToken: localStorage.getItem("accessToken") },
-          })
-          .then(() => {
-            navigate("/");
-          });
-      };
-    
-      const editPost = (option) => {
-        if (option === "title") {
-          setEditingTitle(true);
-        } else {
-          setEditingBody(true);
+  const addComment = () => {
+    axios
+      .post(
+        "http://localhost:3001/comments",
+        {
+          commentBody: newComment,
+          PostId: id,
+        },
+        {
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+          },
         }
-      };
-      
-      const handleTitleChange = (event) => {
-        setPostObject({ ...postObject, title: event.target.value });
-      };
-      
-      const saveTitle = () => {
-        axios
-          .put(
-            "http://localhost:3001/posts/title",
-            { newTitle: postObject.title, id: id },
-            {
-              headers: {
-                accessToken: localStorage.getItem("accessToken"),
-              },
-            }
-          )
-          .then((response) => {
-            if (response.data.error) {
-              console.log(response.data.error);
-            } else {
-              setEditingTitle(false);
-            }
-          });
-      };
+      )
+      .then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          const commentToAdd = {
+            commentBody: newComment,
+            username: response.data.username,
+          };
+          setComments([...comments, commentToAdd]);
+          setNewComment("");
+        }
+      });
+  };
 
-    
-      const handleBodyChange = (event) => {
-        setPostObject({ ...postObject, postText: event.target.value });
-      };
-      
-      const saveBody = () => {
-        axios.put("http://localhost:3001/posts/postText", {newText: postObject.postText, id: id}, {headers: {
-          accessToken: localStorage.getItem("accessToken"),
-        }}) 
-          .then((response) => {
-            if (response.data.error) {
-              console.log(response.data.error);
-            } else {
-              setEditingBody(false);
-            }
-          });
-      };
+  useEffect(() => {
 
-      return (
-        <div className={classes.root}>
-          <div className={classes.post}>
-          {editingTitle ? (
-                <form onSubmit={saveTitle}>
-                  <input
-                    type="text"
-                    value={postObject.title}
-                    onChange={handleTitleChange}
-                    style={{width: '100%'}}
+    axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
+      setPostObject(response.data);
+    });
 
-                  />
-                  <button type="submit">Save</button>
-                </form>
-              ) : (
-                <div
-                  className={classes.postTopFooter}
-                  onClick={() => {
-                    if (authState.username === postObject.username) {
-                      editPost("title");
-                    }
-                  }}
-                >
-                  {postObject.title}
-                </div>
-              )}
-                    
-      
-                    {editingBody ? (
-                        <form onSubmit={saveBody} style={{ width: "100%" }}>
-                          <textarea
-                            type="text"
-                            value={postObject.postText}
-                            onChange={handleBodyChange}
-                            style={{ width: "100%", height: "300px", backgroundColor: '#2b2b2b',
-                                      color: '#f2f2f2',
-                                      padding: '10px', }}
-                          />
-                          <button type="submit">Save</button>
-                        </form>
-                      ) : (
-                        <div
-                          className={classes.postBody}
-                          onClick={() => {
-                            if (authState.username === postObject.username) {
-                              editPost("body");
-                            }
-                          }}
-                        >
-                          {/* {postObject.postText} */}
-                          <CodeBlock language="python" code={postObject.postText}></CodeBlock>
-                        </div>
-                      )}
-      
-                        <div className={classes.postBottomFooter} style={{display: "flex", justifyContent: "space-between", padding: "2 px"}}>
-                            {authState.username === postObject.username && (
-                                <>
-                                  <div>
-                                  {/* other code ... */}
-                                  <Button onClick={handleDelete}>Delete</Button>
-                                  <ConfirmationDialog
-                                    open={confirmOpen}
-                                    onClose={handleCancelDelete}
-                                    onConfirm={handleConfirmDelete}
-                                  />
-                                </div> 
-                              </>
-                          )}
-                        </div>
+    axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
+      setComments(response.data);
+    });
+    // hljs.highlightAll()
+  }, []);
 
-                  
+  const deleteComment = (id) => {
+    axios
+      .delete(`http://localhost:3001/comments/${id}`, {
+        headers: { accessToken: localStorage.getItem("accessToken") }, // additional header provided 
+      })
+      .then(() => {
+        setComments(
+          comments.filter((val) => {
+            return val.id !== id;
+          })
+        );
+      });
+  };
+
+  const deletePost = (id) => {
+    axios
+      .delete(`http://localhost:3001/posts/${id}`, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      })
+      .then(() => {
+        navigate("/");
+      });
+  };
+
+  const editPost = (option) => {
+    if (option === "title") {
+      setEditingTitle(true);
+    } else {
+      setEditingBody(true);
+    }
+  };
+
+  const handleTitleChange = (event) => {
+    setPostObject({ ...postObject, title: event.target.value });
+  };
+
+  const saveTitle = () => {
+    axios
+      .put(
+        "http://localhost:3001/posts/title",
+        { newTitle: postObject.title, id: id },
+        {
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          setEditingTitle(false);
+        }
+      });
+  };
+
+
+  const handleBodyChange = (event) => {
+    setPostObject({ ...postObject, postText: event.target.value });
+  };
+
+  const saveBody = () => {
+    axios.put("http://localhost:3001/posts/postText", { newText: postObject.postText, id: id }, {
+      headers: {
+        accessToken: localStorage.getItem("accessToken"),
+      }
+    })
+      .then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          setEditingBody(false);
+        }
+      });
+  };
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.post}>
+        {editingTitle ? (
+          <form onSubmit={saveTitle}>
+            <input
+              type="text"
+              value={postObject.title}
+              onChange={handleTitleChange}
+              style={{ width: '100%' }}
+
+            />
+            <button type="submit">Save</button>
+          </form>
+        ) : (
+          <div
+            className={classes.postTopFooter}
+            onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost("title");
+              }
+            }}
+          >
+            {postObject.title}
           </div>
-          
+        )}
 
+
+        {editingBody ? (
+          <form onSubmit={saveBody} style={{ width: "100%" }}>
+            <textarea
+              type="text"
+              value={postObject.postText}
+              onChange={handleBodyChange}
+              style={{
+                width: "100%", height: "300px", backgroundColor: '#2b2b2b',
+                color: '#f2f2f2',
+                padding: '10px',
+              }}
+            />
+            <button type="submit">Save</button>
+          </form>
+        ) : (
+          <div
+            className={classes.postBody}
+            onClick={() => {
+              if (authState.username === postObject.username) {
+                editPost("body");
+              }
+            }}
+          >
+            {/* {postObject.postText} */}
+            <CodeBlock language="python" code={postObject.postText}></CodeBlock>
+          </div>
+        )}
+
+        <div className={classes.postBottomFooter} style={{ display: "flex", justifyContent: "space-between", padding: "2 px" }}>
+          {authState.username === postObject.username && (
+            <>
+              <div>
+                {/* other code ... */}
+                <Button onClick={handleDelete}>Delete</Button>
+                <ConfirmationDialog
+                  open={confirmOpen}
+                  onClose={handleCancelDelete}
+                  onConfirm={handleConfirmDelete}
+                />
+              </div>
+            </>
+          )}
         </div>
-      );
+
+
+      </div>
+
+
+    </div>
+  );
 
 }
 

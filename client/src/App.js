@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Link} from "react-router-dom"
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom"
 import Home from "./pages/Home"
 import CreatePost from "./pages/CreatePost"
 import Post from "./pages/Post"
@@ -56,56 +56,53 @@ function App() {
 
 
   return (
-  <div className='App'>
-    <AuthContext.Provider value={{ authState, setAuthState }}>
+    <div className='App'>
+      <AuthContext.Provider value={{ authState, setAuthState }}>
+        <ColorModeContext.Provider value={colorMode}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <div className="app">
+              {/* <Sidebar></Sidebar> */}
+              <Router>
 
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <div className="app">
-            {/* <Sidebar></Sidebar> */}
-            <Router>
+                <Topbar authState = {authState}></Topbar>
 
-              <Topbar></Topbar>
-
-              <div className='navbar'>
-                {!authState.status ? (
-                  <>
-                    <Link to="/login"> Login</Link>
-                    <Link to="/registration"> Registration</Link>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/"> Home Page</Link>
-                    <Link to="/createpost"> Create A Post</Link>
-                  </>
-                )}
-                <div className="loggedInContainer">
-                  <h1>{authState.username} </h1>
-                  {authState.status && <button onClick={logout}> Logout</button>}
+                <div className='navbar'>
+                  {!authState.status ? (
+                    <>
+                      <Link to="/login"> Login</Link>
+                      <Link to="/registration"> Registration</Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/"> Home Page</Link>
+                      <Link to="/createpost"> Create A Post</Link>
+                    </>
+                  )}
+                  <div className="loggedInContainer">
+                    <h1>{authState.username} </h1>
+                    {authState.status && <button onClick={logout}> Logout</button>}
+                  </div>
                 </div>
-              </div>
-              <Routes>
-                <Route path="/" element={<Home></Home>} ></Route>
-                <Route path="/createpost" element={<CreatePost></CreatePost>}></Route>
-                <Route path="/post/byId/:id" element={<Post></Post>} />
-                <Route path="/login" element={<Login></Login>} />
-                <Route path="/registration" element={<Registration></Registration>} />
-                <Route path="/profile/:id" element={<Profile></Profile>} />
-                <Route path="/changepassword/:id" element={<ChangePassword></ChangePassword>} />
-                <Route path="/form" element={<Form></Form>} />
-                <Route path="/codecard" element={<CodeCard></CodeCard>} />
-                <Route path="*" exact element={<PageNotFound></PageNotFound>} />
-
-
-              </Routes>
-            </Router>
-          </div>
-        </ThemeProvider>
-      </ColorModeContext.Provider>
-      {/* </ThemeProvider> */}
-    </AuthContext.Provider>
-  </div>)
+                <Routes>
+                  <Route path="/" element={<Home></Home>} ></Route>
+                  <Route path="/createpost" element={<CreatePost></CreatePost>}></Route>
+                  <Route path="/post/byId/:id" element={<Post></Post>} />
+                  <Route path="/login" element={<Login></Login>} />
+                  <Route path="/registration" element={<Registration></Registration>} />
+                  <Route path="/profile/:id" element={<Profile></Profile>} />
+                  <Route path="/changepassword/:id" element={<ChangePassword></ChangePassword>} />
+                  <Route path="/form" element={<Form></Form>} />
+                  <Route path="/codecard" element={<CodeCard></CodeCard>} />
+                  <Route path="*" exact element={<PageNotFound></PageNotFound>} />
+                </Routes>
+              </Router>
+            </div>
+          </ThemeProvider>
+        </ColorModeContext.Provider>
+        {/* </ThemeProvider> */}
+      </AuthContext.Provider>
+    </div>)
 }
 
 export default App;

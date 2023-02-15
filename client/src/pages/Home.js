@@ -89,7 +89,7 @@ function Home() {
 
 
   //         <div className='footer'>
-  //           <div className='username'> <Link to={`/profile/${value.UserId}`}> {value.username}</Link>  {" "} </div>
+            // <div className='username'> <Link to={`/profile/${value.UserId}`}> {value.username}</Link>  {" "} </div>
 
   //           <ThumbUpIcon
   //             onClick={() => {
@@ -120,6 +120,9 @@ function Home() {
             code={value.postText}
             username={value.username}
             likes={value.Likes.length}
+            post_location = {value.id}
+            user_location = {value.UserId}
+
           />
         );
       })}
