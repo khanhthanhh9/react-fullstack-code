@@ -6,6 +6,7 @@ import Post from "./pages/Post"
 import Registration from "./pages/Registration"
 import Login from "./pages/Login"
 import { AuthContext } from './helpers/AuthContext'
+import { SearchContext } from './helpers/SearchContext'
 import { useState, useEffect } from 'react'
 import axios from "axios";
 import PageNotFound from "./pages/PageNotFound.js";
@@ -13,7 +14,7 @@ import Profile from "./pages/Profile";
 import Form from "./pages/Form";
 import ChangePassword from "./pages/ChangePassword"
 import Topbar from "./global/Topbar"
-import Sidebar from "./global/Sidebar"
+// import Sidebar from "./global/Sidebar"
 import CodeCard from "./pages/CodeCard"
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -28,6 +29,7 @@ function App() {
   });
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios
@@ -60,6 +62,8 @@ function App() {
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <ColorModeContext.Provider value={colorMode}>
           <ThemeProvider theme={theme}>
+          <SearchContext.Provider value={{ search, setSearch }}>
+
             <CssBaseline />
             <div className="app">
               {/* <Sidebar></Sidebar> */}
@@ -84,7 +88,8 @@ function App() {
                     {authState.status && <button onClick={logout}> Logout</button>}
                   </div>
                 </div> */}
-                <Routes key={authState.status}>
+                {/* Need key to rerender when log out */}
+                <Routes key={authState.status}> 
                   <Route path="/" element={<Home></Home>} ></Route>
                   <Route path="/createpost" element={<CreatePost></CreatePost>}></Route>
                   <Route path="/post/byId/:id" element={<Post></Post>} />
@@ -98,6 +103,7 @@ function App() {
                 </Routes>
               </Router>
             </div>
+            </SearchContext.Provider>
           </ThemeProvider>
         </ColorModeContext.Provider>
         {/* </ThemeProvider> */}

@@ -12,6 +12,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { AuthContext } from "../helpers/AuthContext";
 import SignInIcon from '@mui/icons-material/ExitToApp';
 import RegisterIcon from '@mui/icons-material/PersonAdd';
+import { SearchContext } from '../helpers/SearchContext';
 
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -21,6 +22,7 @@ import IU from './IU.png';
 const Topbar = () => {
   const navigate = useNavigate();
   const { authState, setAuthState } = useContext(AuthContext);
+  
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -28,6 +30,7 @@ const Topbar = () => {
   const [hoverText, setHoverText] = useState("");
   const [hoverBoxPosition, setHoverBoxPosition] = useState({});
   const [anchorEl, setAnchorEl] = useState(null);
+  const { search, setSearch } = useContext(SearchContext);
 
   const logout = () => {
     localStorage.removeItem("accessToken");
@@ -88,7 +91,7 @@ const Topbar = () => {
             backgroundColor={colors.primary[400]}
             borderRadius="3px"
           >
-            <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+            <InputBase sx={{ ml: 5, flex: 1 }} placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
             <IconButton type="button" sx={{ p: 1 }}>
               <SearchIcon />
             </IconButton>
