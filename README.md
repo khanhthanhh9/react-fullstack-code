@@ -10,11 +10,13 @@ Clone the repository:
 
 
 git clone https://github.com/<your-github-username>/<your-project-name>.git
-Install the dependencies:
+  
 
+To Install the dependencies:
 cd <your-project-name>
 npm install
-Start the development server:
+  
+To start the development server:
 
 npm start
 This command will start both the client and server and open your default browser at http://localhost:3000.
