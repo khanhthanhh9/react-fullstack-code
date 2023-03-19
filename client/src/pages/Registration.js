@@ -10,6 +10,7 @@ import {
   createMuiTheme,
   ThemeProvider,
 } from "@material-ui/core";
+import {useNavigate} from 'react-router-dom'
 
 const theme = createMuiTheme({
   palette: {
@@ -24,6 +25,8 @@ const theme = createMuiTheme({
 });
 
 function Registration() {
+  const navigate = useNavigate();
+
   const initialValues = {
     username: "",
     email: "",
@@ -43,7 +46,8 @@ function Registration() {
 
   const onSubmit = (data) => {
     axios.post("http://localhost:3001/auth", data).then(() => {
-      console.log(data);
+      // console.log(data);
+      navigate('/')
     });
   };
 
@@ -58,7 +62,8 @@ function Registration() {
           <Form>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField
+                <Field
+                  as={TextField}
                   id="username"
                   name="username"
                   label="Username"
@@ -67,7 +72,7 @@ function Registration() {
                   InputProps={{
                     style: {
                       color: "#fff",
-                      marginTop: "8px"
+                      marginTop: "8px",
                     },
                   }}
                   InputLabelProps={{
@@ -79,7 +84,8 @@ function Registration() {
                 <ErrorMessage name="username" component="div" />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <Field
+                  as={TextField}
                   id="email"
                   name="email"
                   label="Email"
@@ -99,7 +105,8 @@ function Registration() {
                 <ErrorMessage name="email" component="div" />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <Field
+                  as={TextField}
                   id="password"
                   name="password"
                   label="Password"
@@ -120,7 +127,8 @@ function Registration() {
                 <ErrorMessage name="password" component="div" />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <Field
+                  as={TextField}
                   id="phone"
                   name="phone"
                   label="Phone Number"
