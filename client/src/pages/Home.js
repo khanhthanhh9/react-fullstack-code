@@ -7,13 +7,19 @@ import { useNavigate, Link } from 'react-router-dom'
 import { AuthContext } from "../helpers/AuthContext";
 import CodeCard, { Codecard } from "./CodeCard"
 import { makeStyles } from '@material-ui/core/styles';
-// import CodeCard from './CodeCard';
+import { SearchContext } from "../helpers/SearchContext";
 
+
+// import CodeCard from './CodeCard';
+import Topbar from "../global/Topbar"
 
 function Home() {
   const [listOfPosts, setListOfPosts] = useState([])
   const [likedPosts, setLikedPosts] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const { authState } = useContext(AuthContext);
+  const { search } = useContext(SearchContext);
+
   const useStyles = makeStyles((theme) => ({
     container: {
       display: 'flex',
@@ -112,20 +118,28 @@ function Home() {
 
   return (
     <div>
-      {listOfPosts.map((value, key) => {
-        return (
-          <CodeCard
-            key={key}
-            title={value.title}
-            code={value.postText}
-            username={value.username}
-            likes={value.Likes.length}
-            post_location = {value.id}
-            user_location = {value.UserId}
+      {search && <p>You searched for: {search}</p>}
 
-          />
-        );
-      })}
+      {listOfPosts
+        .filter((post) => {
+          return (
+            post.title.toLowerCase().includes(search.toLowerCase()) ||
+            post.postText.toLowerCase().includes(search.toLowerCase())
+          );
+        })
+        .map((value, key) => {
+          return (
+            <CodeCard
+              key={key}
+              title={value.title}
+              code={value.postText}
+              username={value.username}
+              likes={value.Likes.length}
+              post_location={value.id}
+              user_location={value.UserId}
+            />
+          );
+        })}
     </div>
   );
 

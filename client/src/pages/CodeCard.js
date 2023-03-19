@@ -35,8 +35,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#333',
     color: '#ddd',
   },
+  link: {
+    color: '#fff',
+  },
 }));
-
 
 const CodeCard = ({key,title, code, username, likes, post_location, user_location}) => {
   const classes = useStyles();
@@ -54,7 +56,9 @@ const CodeCard = ({key,title, code, username, likes, post_location, user_locatio
         <Typography variant="body1" onClick={() => navigate(`/post/byId/${post_location}`)}>{code}</Typography>
       </div>
       <div className={classes.footer}>
-        <Typography variant="body2" > <Link to={`/profile/${user_location}`}>{username}</Link></Typography>
+        <Typography variant="body2" >
+          <Link to={`/profile/${user_location}`} className={classes.link}>{username}</Link>
+        </Typography>
         <Typography variant="body2">{likes}</Typography>
       </div>
     </Paper>

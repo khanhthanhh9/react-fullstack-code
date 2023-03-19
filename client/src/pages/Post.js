@@ -119,6 +119,7 @@ function Post() {
   const { authState } = useContext(AuthContext);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingBody, setEditingBody] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -212,6 +213,7 @@ function Post() {
     setPostObject({ ...postObject, title: event.target.value });
   };
 
+
   const saveTitle = () => {
     axios
       .put(
@@ -250,6 +252,12 @@ function Post() {
           setEditingBody(false);
         }
       });
+  };
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(postObject.postText);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000); // clear success message after 2 seconds
   };
 
   return (
@@ -319,6 +327,9 @@ function Post() {
                   onClose={handleCancelDelete}
                   onConfirm={handleConfirmDelete}
                 />
+
+            <Button onClick={handleCopyClick}>Copy</Button>
+            {copySuccess && <span style={{color: "green"}}>Copied!</span>}
               </div>
             </>
           )}
